@@ -8,25 +8,30 @@
   <meta name="description" content="Alejandro Cartagena — learning AI software engineering and interested in creating better tools.">
   <title>Alejandro Cartagena | AI Software Engineering</title>
   <link rel="stylesheet" href="css/styles.css">
-  <script src="js/script.js" defer></script>
+  <script src="javascript/script.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   <div class="site-shell">
-    <aside class="sidebar" aria-label="Portfolio sidebar">
-      <a class="brand" href="#home">Alejandro Cartagena</a>
-      <p class="sidebar-focus">AI software engineering</p>
+    <div class="desktop-drawer" id="desktop-drawer">
+      <button class="sidebar-toggle" type="button" aria-controls="site-sidebar" aria-expanded="false" aria-label="Show navigation">
+        <span class="sidebar-toggle-icon" aria-hidden="true"></span>
+      </button>
+      <aside class="sidebar" id="site-sidebar" aria-label="Portfolio sidebar" inert>
+        <a class="brand" href="#home">Alejandro Cartagena</a>
+        <p class="sidebar-focus">AI software engineering</p>
 
-      <nav class="desktop-nav" aria-label="Main navigation">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </aside>
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
 
     <header class="mobile-header">
       <a class="brand" href="#home">Alejandro Cartagena</a>

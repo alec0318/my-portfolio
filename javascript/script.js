@@ -1,5 +1,88 @@
 /* Native-first navigation enhancements for the portfolio. */
 (() => {
+  const desktopDrawer = document.querySelector(".desktop-drawer");
+  const desktopSidebar = desktopDrawer?.querySelector(".sidebar");
+  const sidebarToggle = desktopDrawer?.querySelector(".sidebar-toggle");
+
+  if (desktopDrawer && desktopSidebar && sidebarToggle) {
+    let pointerInside = false;
+    let focusWithinSidebar = false;
+    let pinnedOpen = false;
+    let keyboardNavigation = false;
+    let suppressHover = false;
+
+    function isDrawerOpen() {
+      return pinnedOpen || focusWithinSidebar || (pointerInside && !suppressHover);
+    }
+
+    function updateDrawer() {
+      const open = isDrawerOpen();
+      desktopDrawer.classList.toggle("is-open", open);
+      desktopSidebar.inert = !open;
+      sidebarToggle.setAttribute("aria-expanded", String(open));
+      sidebarToggle.setAttribute("aria-label", open ? "Hide navigation" : "Show navigation");
+    }
+
+    desktopDrawer.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "mouse") return;
+      pointerInside = true;
+      suppressHover = false;
+      updateDrawer();
+    });
+
+    desktopDrawer.addEventListener("pointerleave", (event) => {
+      if (event.pointerType !== "mouse") return;
+      pointerInside = false;
+      suppressHover = false;
+      updateDrawer();
+    });
+
+    desktopDrawer.addEventListener("focusin", (event) => {
+      if (!desktopSidebar.contains(event.target) || !keyboardNavigation) return;
+      focusWithinSidebar = true;
+      pinnedOpen = false;
+      updateDrawer();
+    });
+
+    desktopDrawer.addEventListener("focusout", (event) => {
+      if (!desktopSidebar.contains(event.target)) return;
+      if (event.relatedTarget && desktopSidebar.contains(event.relatedTarget)) return;
+      focusWithinSidebar = false;
+      updateDrawer();
+    });
+
+    sidebarToggle.addEventListener("click", () => {
+      pinnedOpen = !pinnedOpen;
+      updateDrawer();
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      keyboardNavigation = false;
+      focusWithinSidebar = false;
+      if (pinnedOpen && !desktopDrawer.contains(event.target)) pinnedOpen = false;
+      updateDrawer();
+    }, true);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Tab") keyboardNavigation = true;
+      if (event.key !== "Escape" || !isDrawerOpen()) return;
+
+      event.preventDefault();
+      pinnedOpen = false;
+      focusWithinSidebar = false;
+      suppressHover = pointerInside;
+      updateDrawer();
+      sidebarToggle.focus();
+    });
+
+    for (const link of desktopSidebar.querySelectorAll('a[href^="#"]')) {
+      link.addEventListener("click", () => {
+        pinnedOpen = false;
+        updateDrawer();
+      });
+    }
+  }
+
   const sections = Array.from(document.querySelectorAll(".content section[id]"));
   const navigationLinks = Array.from(
     document.querySelectorAll(
@@ -13,7 +96,7 @@
 
   function setCurrentSection(sectionId) {
     for (const link of navigationLinks) {
-      if (link.hash === `#${sectionId}`) {
+      if (link.hash === "#" + sectionId) {
         link.setAttribute("aria-current", "location");
       } else {
         link.removeAttribute("aria-current");
