@@ -1,0 +1,430 @@
+/* Alejandro Cartagena portfolio styles */
+
+:root {
+  color-scheme: light dark;
+  --color-background: #ffffff;
+  --color-surface: #f5f7fb;
+  --color-surface-raised: #ffffff;
+  --color-text: #171b24;
+  --color-muted: #4f5b6b;
+  --color-border: #d9e0ec;
+  --color-accent: #0041c2;
+  --color-accent-text: #ffffff;
+  --color-link: #0041c2;
+  --color-accent-soft: #edf3ff;
+  --color-focus: #6d9cf5;
+  --shadow-menu: 0 1rem 2.5rem rgb(18 32 60 / 14%);
+  --radius-small: 0.75rem;
+  --radius-medium: 1rem;
+  --radius-large: 1.5rem;
+  --content-width: 58rem;
+  font-family: "Lenia Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+summary,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: var(--color-link);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.08em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.13em;
+}
+
+a:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 4px;
+  border-radius: 0.25rem;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-180%);
+  border-radius: var(--radius-small);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-shell {
+  display: grid;
+  grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
+  min-height: 100vh;
+  max-width: 100rem;
+  margin-inline: auto;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  grid-column: 1;
+  grid-row: 1;
+  height: 100vh;
+  padding: 2.5rem 1.5rem;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.brand {
+  display: inline-block;
+  color: var(--color-text);
+  font-size: 1.08rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.sidebar-focus {
+  margin: 0.55rem 0 2.75rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.desktop-nav ul,
+.mobile-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.desktop-nav a,
+.mobile-nav nav a {
+  display: block;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-small);
+  color: var(--color-muted);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.desktop-nav a:hover,
+.mobile-nav nav a:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-link);
+}
+
+.mobile-header {
+  display: none;
+}
+
+.content {
+  grid-column: 2;
+  grid-row: 1;
+  width: min(100%, var(--content-width));
+  justify-self: center;
+  padding: clamp(3rem, 7vw, 6.5rem) clamp(2rem, 7vw, 6rem);
+}
+
+.content section {
+  scroll-margin-top: 6rem;
+}
+
+.intro {
+  padding-block: 0.5rem 3rem;
+}
+
+.eyebrow,
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 1rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-link);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-text);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 {
+  max-width: 14ch;
+  margin-bottom: 1.2rem;
+  font-size: clamp(2.35rem, 5.5vw, 4.25rem);
+  letter-spacing: -0.055em;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  letter-spacing: -0.035em;
+}
+
+h3 {
+  margin-bottom: 0.65rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.intro-copy,
+.about > p,
+.project-card > p:last-child,
+.contact > p {
+  max-width: 62ch;
+  color: var(--color-muted);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+}
+
+.intro-copy {
+  margin-bottom: 1.75rem;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.15rem;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: 750;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.button:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.button:focus-visible {
+  outline-offset: 4px;
+}
+
+.content section + section {
+  padding-top: 2.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.about,
+.projects,
+.contact {
+  padding-bottom: 2.75rem;
+}
+
+.project-card {
+  max-width: 42rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+}
+
+.project-status {
+  margin-bottom: 0.85rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.025em;
+}
+
+.project-card > p:last-child {
+  margin-bottom: 0;
+}
+
+.email-link {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #17191d;
+    --color-surface: #202329;
+    --color-surface-raised: #252932;
+    --color-text: #f4f6fa;
+    --color-muted: #c0c7d2;
+    --color-border: #3b424e;
+    --color-link: #9abaff;
+    --color-accent-soft: #202d45;
+    --color-focus: #a7c5ff;
+    --shadow-menu: 0 1rem 2.5rem rgb(0 0 0 / 38%);
+  }
+}
+
+@media (max-width: 50rem) {
+  .site-shell {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-header {
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    display: flex;
+    min-height: 4.25rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem clamp(1rem, 4vw, 1.5rem);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-background);
+  }
+
+  .mobile-header .brand {
+    min-width: 0;
+    font-size: 1rem;
+  }
+
+  .mobile-nav {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .mobile-nav summary {
+    display: flex;
+    min-height: 2.65rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    list-style: none;
+  }
+
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-nav summary::after {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    content: "";
+    transform: translateY(-0.12rem) rotate(45deg);
+    transition: transform 160ms ease;
+  }
+
+  .mobile-nav[open] summary::after {
+    transform: translateY(0.12rem) rotate(225deg);
+  }
+
+  .mobile-nav > nav {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    min-width: 12rem;
+    padding: 0.45rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-menu);
+  }
+
+  .mobile-nav ul {
+    gap: 0.2rem;
+  }
+
+  .content {
+    width: min(100%, var(--content-width));
+    margin-inline: auto;
+    padding: clamp(2.25rem, 8vw, 4rem) clamp(1.25rem, 6vw, 2.5rem);
+  }
+
+  .content section {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
+@media (max-width: 24rem) {
+  .mobile-header {
+    gap: 0.5rem;
+  }
+
+  .mobile-nav summary {
+    padding-inline: 0.6rem;
+    font-size: 0.84rem;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 11vw, 2.55rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
