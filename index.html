@@ -4,22 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#0041c2">
+  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Alejandro Cartagena — learning AI software engineering and interested in creating better tools.">
   <title>Alejandro Cartagena | AI Software Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script src="javascript/script.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <div class="site-shell">
+  <div class="site-shell" id="site-shell">
     <div class="desktop-drawer" id="desktop-drawer">
       <button class="sidebar-toggle" type="button" aria-controls="site-sidebar" aria-expanded="false" aria-label="Show navigation">
         <span class="sidebar-toggle-icon" aria-hidden="true"></span>
       </button>
       <aside class="sidebar" id="site-sidebar" aria-label="Portfolio sidebar" inert>
-        <a class="brand" href="#home">Alejandro Cartagena</a>
+        <a class="sidebar-brand" href="#home" aria-label="Alejandro Cartagena home">
+          <span class="monogram" aria-hidden="true">CD</span>
+          <span class="sidebar-name">Alejandro Cartagena</span>
+        </a>
         <p class="sidebar-focus">AI software engineering</p>
 
         <nav class="desktop-nav" aria-label="Main navigation">
@@ -30,13 +36,23 @@
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
+
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-label">Dark mode</span>
+        </button>
+
+        <p class="sidebar-wordmark">Cartagena Developer</p>
       </aside>
     </div>
 
     <header class="mobile-header">
-      <a class="brand" href="#home">Alejandro Cartagena</a>
+      <a class="mobile-brand" href="#home" aria-label="Alejandro Cartagena home">
+        <span class="monogram" aria-hidden="true">CD</span>
+        <span class="mobile-brand-name">Alejandro Cartagena</span>
+      </a>
       <details class="mobile-nav">
-        <summary>Navigate portfolio</summary>
+        <summary>Menu</summary>
         <nav aria-label="Mobile navigation">
           <ul>
             <li><a href="#home">Home</a></li>
@@ -44,6 +60,12 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
+          <div class="mobile-menu-actions">
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+              <span class="theme-icon" aria-hidden="true">☾</span>
+              <span class="theme-label">Dark mode</span>
+            </button>
+          </div>
         </nav>
       </details>
     </header>
@@ -76,6 +98,10 @@
         <a class="email-link" href="mailto:acartagena0318@gmail.com">acartagena0318@gmail.com</a>
       </section>
     </main>
+
+    <footer class="mobile-footer">
+      <span class="mobile-wordmark">Cartagena Developer</span>
+    </footer>
   </div>
 </body>
 </html>
