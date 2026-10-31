@@ -187,13 +187,14 @@ summary:focus-visible {
 }
 
 .sidebar-brand {
-  display: inline-flex;
-  width: fit-content;
+  display: flex;
+  width: 100%;
   max-width: 100%;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.7rem;
+  align-items: center;
+  gap: 0.55rem;
   color: var(--color-text);
+  text-align: center;
   text-decoration: none;
 }
 
@@ -202,21 +203,23 @@ summary:focus-visible {
 }
 
 .monogram {
-  display: grid;
-  width: 3.5rem;
-  height: 3.5rem;
+  display: inline-flex;
+  width: auto;
+  height: auto;
   flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid rgb(255 255 255 / 28%);
-  border-radius: 1.15rem;
-  background: #0041c2;
-  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #0041c2;
   font-family: "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
-  font-size: 1.12rem;
+  font-size: 1.7rem;
   font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 1;
-  box-shadow: 0 0.5rem 1rem rgb(0 65 194 / 20%);
+  white-space: nowrap;
 }
 
 .sidebar-name,
@@ -229,10 +232,15 @@ summary:focus-visible {
   line-height: 1.35;
 }
 
+.sidebar-name {
+  text-align: center;
+}
+
 .sidebar-focus {
   margin: 0.5rem 0 0;
   color: var(--color-muted);
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .desktop-nav {
@@ -286,9 +294,26 @@ summary:focus-visible {
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
-.theme-toggle:hover {
-  border-color: var(--color-focus);
-  background: var(--color-accent-soft);
+.theme-toggle[data-theme-target="dark"] {
+  border-color: #202329;
+  background: #202329;
+  color: #f4f6fa;
+}
+
+.theme-toggle[data-theme-target="light"] {
+  border-color: #d9e0ec;
+  background: #ffffff;
+  color: #171b24;
+}
+
+.theme-toggle[data-theme-target="dark"]:hover {
+  border-color: #4a5361;
+  background: #303744;
+}
+
+.theme-toggle[data-theme-target="light"]:hover {
+  border-color: #c2ccdb;
+  background: #f1f4f9;
 }
 
 .theme-icon {
@@ -297,13 +322,14 @@ summary:focus-visible {
   height: 1.35rem;
   flex: 0 0 auto;
   place-items: center;
-  color: var(--color-link);
+  color: currentColor;
   font-family: system-ui, sans-serif;
   font-size: 1.15rem;
   line-height: 1;
 }
 
 .sidebar-wordmark {
+  width: 100%;
   margin: auto 0 0;
   padding-top: 2rem;
   color: var(--color-wordmark);
@@ -311,6 +337,7 @@ summary:focus-visible {
   font-weight: 700;
   letter-spacing: 0.035em;
   line-height: 1.35;
+  text-align: center;
 }
 
 .mobile-header {
@@ -530,10 +557,7 @@ h3 {
   }
 
   .mobile-brand .monogram {
-    width: 2.55rem;
-    height: 2.55rem;
-    border-radius: 0.85rem;
-    font-size: 0.9rem;
+    font-size: 0.98rem;
   }
 
   .mobile-brand-name {
@@ -629,10 +653,13 @@ h3 {
   }
 
   .mobile-wordmark {
+    display: block;
+    width: 100%;
     color: var(--color-wordmark);
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.035em;
+    text-align: center;
   }
 }
 
@@ -646,10 +673,7 @@ h3 {
   }
 
   .mobile-brand .monogram {
-    width: 2.3rem;
-    height: 2.3rem;
-    border-radius: 0.75rem;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
   }
 
   .mobile-brand-name {

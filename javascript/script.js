@@ -28,6 +28,7 @@
     const nextIcon = nextTheme === "dark" ? "☾" : "☀";
 
     for (const button of themeButtons) {
+      button.dataset.themeTarget = nextTheme;
       button.setAttribute("aria-label", "Switch to " + nextTheme + " mode");
       const label = button.querySelector(".theme-label");
       const icon = button.querySelector(".theme-icon");
