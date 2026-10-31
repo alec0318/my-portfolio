@@ -704,3 +704,104 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* Home hero: quiet blue logo pattern and naturally blended portrait. */
+.intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.35rem, 4vw, 3rem);
+  border-radius: var(--radius-large);
+  background: #050505;
+  color: #f4f6fa;
+}
+
+.intro::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='128' viewBox='0 0 180 128'%3E%3Cg fill='%230041c2' font-family='Nunito,sans-serif' font-size='17' font-weight='900'%3E%3Ctext x='12' y='30'%3E%26lt%3BCD%26gt%3B%3C/text%3E%3Ctext x='98' y='75'%3E%26lt%3BCD%26gt%3B%3C/text%3E%3Ctext x='20' y='120'%3E%26lt%3BCD%26gt%3B%3C/text%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 128px;
+  content: "";
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.intro > * {
+  position: relative;
+  z-index: 1;
+}
+
+.intro .eyebrow {
+  border-color: rgb(182 204 255 / 28%);
+  background: rgb(0 65 194 / 24%);
+  color: #c5d6ff;
+}
+
+.intro-heading-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 13rem);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.intro-heading-row h1 {
+  max-width: 14ch;
+  margin: 0;
+  color: #f4f6fa;
+}
+
+.hero-portrait {
+  display: block;
+  width: 100%;
+  max-width: 13rem;
+  height: auto;
+  justify-self: center;
+  object-fit: contain;
+  -webkit-mask-image: radial-gradient(ellipse 82% 94% at 50% 46%, #000 64%, rgb(0 0 0 / 78%) 80%, transparent 100%);
+  mask-image: radial-gradient(ellipse 82% 94% at 50% 46%, #000 64%, rgb(0 0 0 / 78%) 80%, transparent 100%);
+  filter: drop-shadow(0 0.75rem 1.75rem rgb(0 0 0 / 28%));
+}
+
+.intro .intro-copy {
+  margin-top: 1.4rem;
+  color: rgb(244 246 250 / 86%);
+}
+
+@media (max-width: 50rem) {
+  .intro {
+    padding: clamp(1.25rem, 4.5vw, 2rem);
+  }
+}
+
+@media (max-width: 42rem) {
+  .intro-heading-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  .intro-heading-row h1 {
+    max-width: 13ch;
+  }
+
+  .hero-portrait {
+    width: min(64%, 13rem);
+  }
+}
+
+@media (max-width: 24rem) {
+  .intro {
+    padding: 1.15rem;
+  }
+
+  .intro-heading-row h1 {
+    max-width: 11ch;
+  }
+
+  .hero-portrait {
+    width: min(70%, 12rem);
+  }
+}
