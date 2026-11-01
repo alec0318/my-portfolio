@@ -1024,3 +1024,19 @@ body::before {
 .mobile-wordmark {
   margin-inline: auto;
 }
+
+/* Show the expanded, stamp-free main-page footer on desktop. */
+@media (min-width: 50.01rem) {
+  .mobile-footer {
+    display: block;
+    width: 100%;
+    margin-inline: 0;
+    padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+    background-color: var(--main-canvas);
+  }
+
+  .mobile-wordmark {
+    font-size: clamp(1.5rem, 2.7vw, 2.15rem);
+    line-height: 1.15;
+  }
+}
