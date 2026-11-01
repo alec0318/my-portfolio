@@ -5,6 +5,7 @@
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const themeStorageKey = "alejandro-portfolio-theme";
   const colorSchemePreference = window.matchMedia?.("(prefers-color-scheme: dark)");
+  const reducedMotionPreference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   function readSavedTheme() {
     try {
@@ -51,6 +52,10 @@
   }
 
   applyTheme(activeTheme);
+
+  if (!reducedMotionPreference?.matches && document.querySelector("[data-page-entry]")) {
+    root.classList.add("has-page-entry-motion");
+  }
 
   for (const button of themeButtons) {
     button.addEventListener("click", () => {
@@ -222,7 +227,6 @@
   const mobileMenuSummary = mobileMenu?.querySelector("summary");
 
   const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
-  const reducedMotionPreference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   if (
     revealTargets.length > 0 &&
