@@ -187,6 +187,29 @@
   const mobileMenu = document.querySelector(".mobile-nav");
   const mobileMenuSummary = mobileMenu?.querySelector("summary");
 
+  const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
+  const reducedMotionPreference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+
+  if (
+    revealTargets.length > 0 &&
+    !reducedMotionPreference?.matches &&
+    "IntersectionObserver" in window
+  ) {
+    root.classList.add("has-scroll-reveal");
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+    );
+
+    for (const target of revealTargets) revealObserver.observe(target);
+  }
+
   if (sections.length === 0 || navigationLinks.length === 0) return;
 
   function setCurrentSection(sectionId) {
