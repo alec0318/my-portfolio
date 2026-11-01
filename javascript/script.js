@@ -74,6 +74,40 @@
     }
   });
 
+  // Keep the repeating pattern almost fixed: only 4% of scroll distance, capped at 40px.
+  const parallaxMotionPreference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+  let parallaxActive = false;
+  let parallaxFramePending = false;
+
+  function updatePatternParallax() {
+    if (parallaxFramePending) return;
+    parallaxFramePending = true;
+    window.requestAnimationFrame(() => {
+      if (parallaxActive) {
+        const offset = Math.min(Math.max(window.scrollY, 0) * 0.04, 40);
+        root.style.setProperty("--pattern-parallax-offset", `${offset.toFixed(2)}px`);
+      }
+      parallaxFramePending = false;
+    });
+  }
+
+  function syncPatternParallax() {
+    const shouldEnable = !parallaxMotionPreference?.matches;
+    if (shouldEnable === parallaxActive) return;
+    parallaxActive = shouldEnable;
+
+    if (shouldEnable) {
+      window.addEventListener("scroll", updatePatternParallax, { passive: true });
+      updatePatternParallax();
+    } else {
+      window.removeEventListener("scroll", updatePatternParallax);
+      root.style.removeProperty("--pattern-parallax-offset");
+    }
+  }
+
+  syncPatternParallax();
+  parallaxMotionPreference?.addEventListener("change", syncPatternParallax);
+
   const siteShell = document.querySelector(".site-shell");
   const desktopDrawer = document.querySelector(".desktop-drawer");
   const desktopSidebar = desktopDrawer?.querySelector(".sidebar");
