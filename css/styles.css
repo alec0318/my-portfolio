@@ -899,13 +899,13 @@ h3 {
   --stamp-opacity: 0.08;
 }
 
-.content {
+body {
   position: relative;
   isolation: isolate;
   background-color: var(--main-canvas);
 }
 
-.content::before {
+body::before {
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -915,6 +915,12 @@ h3 {
   content: "";
   opacity: var(--stamp-opacity);
   pointer-events: none;
+}
+
+.content {
+  position: relative;
+  isolation: isolate;
+  background-color: transparent;
 }
 
 /* The global canvas supplies the hero pattern too; keep the foreground theme-aware. */
