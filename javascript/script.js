@@ -84,7 +84,7 @@
     parallaxFramePending = true;
     window.requestAnimationFrame(() => {
       if (parallaxActive) {
-        const offset = Math.min(Math.max(window.scrollY, 0) * 0.04, 40);
+        const offset = -Math.min(Math.max(window.scrollY, 0) * 0.04, 40);
         root.style.setProperty("--pattern-parallax-offset", `${offset.toFixed(2)}px`);
       }
       parallaxFramePending = false;
