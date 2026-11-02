@@ -808,15 +808,11 @@ h3 {
 }
 
 
-/* Full-width hero edges and blue gradient marks */
-.content {
-  --hero-edge-gutter: clamp(2rem, 7vw, 6rem);
-}
-
+/* Keep hero elements on the same responsive content grid as About. */
 .intro {
-  width: calc(100% + var(--hero-edge-gutter) + var(--hero-edge-gutter));
-  margin-inline: calc(0rem - var(--hero-edge-gutter));
-  padding-inline: calc(var(--hero-edge-gutter) + clamp(1.35rem, 4vw, 3rem));
+  width: auto;
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 .sidebar-brand .monogram {
@@ -831,13 +827,6 @@ h3 {
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'180'%20height%3D'128'%20viewBox%3D'0%200%20180%20128'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'mark'%20x1%3D'0'%20y1%3D'1'%20x2%3D'1'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230041c2'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%2379b8ff'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%20fill%3D'url(%23mark)'%20font-family%3D'Nunito%2Csans-serif'%20font-size%3D'17'%20font-weight%3D'900'%3E%3Ctext%20x%3D'12'%20y%3D'30'%3E%26lt%3BCD%26gt%3B%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'75'%3E%26lt%3BCD%26gt%3B%3C%2Ftext%3E%3Ctext%20x%3D'20'%20y%3D'120'%3E%26lt%3BCD%26gt%3B%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E");
   opacity: 0.24;
 }
-
-@media (max-width: 50rem) {
-  .content {
-    --hero-edge-gutter: clamp(1.25rem, 6vw, 2.5rem);
-  }
-}
-
 
 /* Clear hero actions and accessible GitHub profile links. */
 .intro-actions {
@@ -1045,7 +1034,7 @@ body::before {
 .mobile-footer {
   position: relative;
   isolation: isolate;
-  background-color: var(--main-canvas);
+  background-color: transparent;
   text-align: center;
 }
 
@@ -1053,18 +1042,38 @@ body::before {
   margin-inline: auto;
 }
 
-/* Show the expanded, stamp-free main-page footer on desktop. */
+/* Keep the footer aligned to the main content on desktop as well. */
 @media (min-width: 50.01rem) {
   .mobile-footer {
     display: block;
-    width: 100%;
-    margin-inline: 0;
-    padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
-    background-color: var(--main-canvas);
+    width: min(100%, var(--content-width));
+    margin-inline: auto;
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 7vw, 6rem);
   }
 
   .mobile-wordmark {
     font-size: clamp(1.5rem, 2.7vw, 2.15rem);
     line-height: 1.15;
   }
+}
+
+/* A local solid-center veil hides stamps only behind the wordmark. */
+.mobile-footer::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: var(--radius-large);
+  background: radial-gradient(
+    ellipse 100% 155% at 50% 50%,
+    var(--main-canvas) 0 68%,
+    color-mix(in srgb, var(--main-canvas) 84%, transparent) 82%,
+    transparent 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.mobile-wordmark {
+  position: relative;
+  z-index: 1;
 }
