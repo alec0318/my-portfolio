@@ -751,7 +751,7 @@ h3 {
 }
 
 .intro-heading-row h1 {
-  align-self: start;
+  align-self: center;
   max-width: 14ch;
   margin: 0;
   color: #f4f6fa;
@@ -1084,4 +1084,29 @@ body::before {
 .mobile-wordmark {
   position: relative;
   z-index: 1;
+}
+
+/* Tighten the hero text gaps without shifting portrait or action flow. */
+@media (min-width: 42.001rem) {
+  .intro .eyebrow {
+    position: relative;
+    top: 40px;
+  }
+
+  .intro-heading-row h1 {
+    position: relative;
+    top: 20px;
+  }
+}
+
+@media (max-width: 42rem) {
+  .intro .eyebrow {
+    position: relative;
+    top: 12px;
+  }
+
+  .intro-heading-row h1 {
+    position: relative;
+    top: 8px;
+  }
 }
