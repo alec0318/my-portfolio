@@ -1057,20 +1057,26 @@ body::before {
   }
 }
 
-/* A local solid-center veil hides stamps only behind the wordmark. */
+/* Keep the broad local veil inside the footer horizontally; fade all edges out. */
 .mobile-footer::before {
+  --footer-veil-solid-stop: 54%;
   position: absolute;
   z-index: 0;
-  inset: 0;
-  border-radius: var(--radius-large);
+  inset-block: -4rem;
+  inset-inline: 0;
   background: radial-gradient(
-    ellipse 100% 155% at 50% 50%,
-    var(--main-canvas) 0 68%,
-    color-mix(in srgb, var(--main-canvas) 84%, transparent) 82%,
+    ellipse 50% 50% at 50% 50%,
+    var(--main-canvas) 0 var(--footer-veil-solid-stop),
     transparent 100%
   );
   content: "";
   pointer-events: none;
+}
+
+@media (max-width: 24rem) {
+  .mobile-footer::before {
+    --footer-veil-solid-stop: 64%;
+  }
 }
 
 .mobile-wordmark {
