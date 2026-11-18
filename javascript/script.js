@@ -80,7 +80,6 @@
   });
 
   // Keep the repeating pattern almost fixed: only 4% of scroll distance, capped at 40px.
-  const parallaxMotionPreference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
   let parallaxActive = false;
   let parallaxFramePending = false;
 
@@ -97,7 +96,7 @@
   }
 
   function syncPatternParallax() {
-    const shouldEnable = !parallaxMotionPreference?.matches;
+    const shouldEnable = !reducedMotionPreference?.matches;
     if (shouldEnable === parallaxActive) return;
     parallaxActive = shouldEnable;
 
@@ -111,7 +110,7 @@
   }
 
   syncPatternParallax();
-  parallaxMotionPreference?.addEventListener("change", syncPatternParallax);
+  reducedMotionPreference?.addEventListener("change", syncPatternParallax);
 
   const siteShell = document.querySelector(".site-shell");
   const desktopDrawer = document.querySelector(".desktop-drawer");
