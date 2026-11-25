@@ -73,16 +73,22 @@
   });
 
   // Keep the repeating pattern almost fixed: only 4% of scroll distance, capped at 40px.
+  // Writing the element's own transform avoids restyling the whole document on every scroll frame.
+  const pattern = document.querySelector(".canvas-pattern");
   let parallaxActive = false;
+  let lastParallaxOffset = null;
   let parallaxFramePending = false;
 
   function updatePatternParallax() {
     if (parallaxFramePending) return;
     parallaxFramePending = true;
     window.requestAnimationFrame(() => {
-      if (parallaxActive) {
-        const offset = -Math.min(Math.max(window.scrollY, 0) * 0.04, 40);
-        root.style.setProperty("--pattern-parallax-offset", `${offset.toFixed(2)}px`);
+      if (parallaxActive && pattern) {
+        const offset = (-Math.min(Math.max(window.scrollY, 0) * 0.04, 40)).toFixed(1);
+        if (offset !== lastParallaxOffset) {
+          pattern.style.transform = `translate3d(0, ${offset}px, 0)`;
+          lastParallaxOffset = offset;
+        }
       }
       parallaxFramePending = false;
     });
@@ -98,12 +104,21 @@
       updatePatternParallax();
     } else {
       window.removeEventListener("scroll", updatePatternParallax);
-      root.style.removeProperty("--pattern-parallax-offset");
+      pattern?.style.removeProperty("transform");
+      lastParallaxOffset = null;
     }
   }
 
   syncPatternParallax();
   reducedMotionPreference?.addEventListener("change", syncPatternParallax);
+
+  // After the staggered entrance, collapse the four fading layers back into one (same picture, less GPU work).
+  const lastPatternLayer = pattern?.lastElementChild;
+  const settlePattern = (event) => {
+    if (event.target === lastPatternLayer) pattern.classList.add("is-settled");
+  };
+  pattern?.addEventListener("animationend", settlePattern);
+  pattern?.addEventListener("animationcancel", settlePattern);
 
   const siteShell = document.querySelector(".site-shell");
   const desktopDrawer = document.querySelector(".desktop-drawer");
