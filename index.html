@@ -12,10 +12,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Nunito is only used for the <AC> monogram and wordmarks; `text` limits the download to those glyphs. -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap&text=%3C%3EACaeljndrotg%20" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=perf-cleanup-20261118">
-  <script src="javascript/script.js?v=perf-cleanup-20261118" defer></script>
+  <link rel="stylesheet" href="css/styles.css?v=intro-refresh-20261124">
+  <!-- Inline so the entrance and reveal start states are set before first paint (no flash of the final state). -->
+  <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { document.documentElement.classList.add("has-page-entry-motion"); if ("IntersectionObserver" in window) document.documentElement.classList.add("has-scroll-reveal"); }</script>
+  <script src="javascript/script.js?v=intro-refresh-20261124" defer></script>
 </head>
 <body>
+  <div class="canvas-pattern" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   <div class="site-shell" id="site-shell">
@@ -40,7 +43,7 @@
         </nav>
 
         <button class="theme-toggle" type="button" data-theme-toggle data-theme-target="dark" aria-label="Switch to dark mode">
-          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-icon" aria-hidden="true"><span class="theme-icon-moon">☾</span><svg class="theme-icon-sun" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></span>
           <span class="theme-label">Dark mode</span>
         </button>
 
@@ -64,7 +67,7 @@
           </ul>
           <div class="mobile-menu-actions">
             <button class="theme-toggle" type="button" data-theme-toggle data-theme-target="dark" aria-label="Switch to dark mode">
-              <span class="theme-icon" aria-hidden="true">☾</span>
+              <span class="theme-icon" aria-hidden="true"><span class="theme-icon-moon">☾</span><svg class="theme-icon-sun" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></span>
               <span class="theme-label">Dark mode</span>
             </button>
           </div>
@@ -73,16 +76,24 @@
     </header>
 
     <main id="main-content" class="content">
-      <section id="home" class="intro" data-reveal="section" aria-labelledby="intro-title">
-        <p class="eyebrow">AI software engineering</p>
+      <section id="home" class="intro" data-page-entry="intro" aria-labelledby="intro-title">
         <div class="intro-heading-row">
-          <h1 id="intro-title" data-page-entry="greeting">Hi, I’m Alejandro Cartagena.</h1>
-          <img class="hero-portrait" data-page-entry="portrait" src="alejandro-portrait.webp" width="280" height="498" alt="Portrait of Alejandro Cartagena" fetchpriority="high" decoding="async">
+          <h1 id="intro-title" class="intro-title">
+            <span class="intro-greeting">Hi there I’m</span>
+            <span class="intro-name"><span aria-hidden="true">&lt;</span>Alejandro Cartagena<span aria-hidden="true">&gt;</span></span>
+            <span class="intro-role">Software Engineer</span>
+          </h1>
+          <img class="hero-portrait" src="alejandro-portrait.webp" width="280" height="498" alt="Portrait of Alejandro Cartagena" fetchpriority="high" decoding="async">
         </div>
         <p class="intro-copy">I’m interested in technology, especially software. I studied at the Polytechnic University of Puerto Rico and Holberton Coding School. I’m learning to use AI to build better tools and make everyday tasks easier.</p>
         <div class="intro-actions">
           <a class="button" href="mailto:acartagena0318@gmail.com">Email me</a>
           <a class="button button-github" href="https://github.com/alec0318" target="_blank" rel="noopener noreferrer" aria-label="Visit Alejandro Cartagena on GitHub (opens in a new tab)">GitHub profile</a>
+          <span class="linkedin-placeholder">
+            <!-- Placeholder URL until the LinkedIn profile exists. -->
+            <a class="button button-linkedin" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile, will be added soon (opens in a new tab)">LinkedIn profile</a>
+            <small class="link-note" aria-hidden="true">(will be added soon)</small>
+          </span>
         </div>
       </section>
 

@@ -26,15 +26,12 @@
 
     const nextTheme = activeTheme === "dark" ? "light" : "dark";
     const nextLabel = nextTheme === "dark" ? "Dark mode" : "Light mode";
-    const nextIcon = nextTheme === "dark" ? "☾" : "☀";
 
     for (const button of themeButtons) {
       button.dataset.themeTarget = nextTheme;
       button.setAttribute("aria-label", "Switch to " + nextTheme + " mode");
       const label = button.querySelector(".theme-label");
-      const icon = button.querySelector(".theme-icon");
       if (label) label.textContent = nextLabel;
-      if (icon) icon.textContent = nextIcon;
     }
 
     if (themeMeta) {
@@ -52,10 +49,6 @@
   }
 
   applyTheme(activeTheme);
-
-  if (!reducedMotionPreference?.matches && document.querySelector("[data-page-entry]")) {
-    root.classList.add("has-page-entry-motion");
-  }
 
   for (const button of themeButtons) {
     button.addEventListener("click", () => {
@@ -244,7 +237,24 @@
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
     );
 
-    for (const target of revealTargets) revealObserver.observe(target);
+    const startReveal = () => {
+      for (const target of revealTargets) revealObserver.observe(target);
+    };
+    // The inline head script sets has-page-entry-motion; cards wait until the intro has faded in.
+    const introEntry = document.querySelector('[data-page-entry="intro"]');
+    if (introEntry && root.classList.contains("has-page-entry-motion")) {
+      let revealStarted = false;
+      const startRevealOnce = () => {
+        if (revealStarted) return;
+        revealStarted = true;
+        startReveal();
+      };
+      // animationcancel covers reduced motion being switched on mid-entrance.
+      introEntry.addEventListener("animationend", startRevealOnce);
+      introEntry.addEventListener("animationcancel", startRevealOnce);
+    } else {
+      startReveal();
+    }
   }
 
   if (sections.length === 0 || navigationLinks.length === 0) return;
