@@ -867,11 +867,34 @@ h3 {
 
 .canvas-pattern > span {
   position: absolute;
-  inset: 0 0 auto;
+  /* Left bleed covers the sidebar shift (script.js moves the front layer right by up to 90% of the 17rem sidebar). */
+  inset: 0 0 auto -16rem;
   height: 100%;
   opacity: var(--stamp-opacity);
-  will-change: transform;
+  will-change: transform, translate;
+  animation: logo-float var(--float-time) ease-in-out var(--float-delay) infinite;
 }
+
+/* Idle float: a few pixels of slow drift per layer, run by the compositor (no script per frame). */
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  33% {
+    transform: translate(calc(var(--float) * 0.6), calc(var(--float) * -1));
+  }
+
+  66% {
+    transform: translate(calc(var(--float) * -0.5), calc(var(--float) * 0.5));
+  }
+}
+
+.canvas-pattern > :nth-child(1) { --float: 2px; --float-time: 19s; --float-delay: -3s; }
+.canvas-pattern > :nth-child(2) { --float: 3px; --float-time: 16s; --float-delay: -9s; }
+.canvas-pattern > :nth-child(3) { --float: 4px; --float-time: 13s; --float-delay: -5s; }
+.canvas-pattern > :nth-child(4) { --float: 5px; --float-time: 11s; --float-delay: -1s; }
 
 .canvas-pattern i {
   position: absolute;
@@ -948,7 +971,9 @@ h3 {
   }
 
   .canvas-pattern > span {
+    animation: none !important;
     transform: none !important;
+    translate: none !important;
     will-change: auto;
   }
 
@@ -986,7 +1011,9 @@ h3 {
 }
 
 .has-page-entry-motion .canvas-pattern > span {
-  animation: portfolio-pattern-entry 800ms ease-out var(--entry-delay, 0ms) both;
+  animation:
+    portfolio-pattern-entry 800ms ease-out var(--entry-delay, 0ms) both,
+    logo-float var(--float-time) ease-in-out var(--float-delay) infinite;
 }
 
 .canvas-pattern > :nth-child(1) { --entry-delay: 150ms; }

@@ -74,22 +74,39 @@
 
   // Background marks: random positions and sizes on every visit, sorted into four depth layers.
   // Small marks sit in the slow back layer, large ones in the faster front layer (subtle parallax).
+  // CSS floats each layer gently (transform); this script eases each layer's `translate` toward its
+  // scroll and sidebar targets, so motion decelerates instead of stopping dead.
   const pattern = document.querySelector(".canvas-pattern");
   const layers = pattern ? Array.from(pattern.children) : [];
   const layerSpeeds = [0.03, 0.06, 0.1, 0.14];
+  // Share of the cards' sidebar shift each layer follows: back layers lag, the front layer nearly keeps pace.
+  const sidebarFollow = [0.35, 0.5, 0.7, 0.9];
+  // Easing time constants (ms; ~95% settled after 3x): scroll glides, sidebar keeps pace with its 260ms slide.
+  const easeTimeY = 140;
+  const easeTimeX = 85;
   const minMarkSize = 12;
   const maxMarkSize = 36;
+  const shell = document.querySelector(".site-shell");
+  const cards = document.querySelector("main");
+  const current = layers.map(() => ({ x: 0, y: 0 }));
   let parallaxActive = false;
-  let parallaxFramePending = false;
   let maxScroll = 0;
+  let sidebarShift = 0;
+  let sidebarOpen = false;
+  let cardsClosedLeft = 0;
+  let trackCardsUntil = 0;
+  let easing = false;
+  let lastFrame = 0;
 
   function placeMarks() {
-    const width = window.innerWidth;
+    // Layers extend past the left edge so the sidebar shift never exposes an empty strip.
+    const bleed = -(layers[0].offsetLeft || 0);
+    const width = window.innerWidth + bleed;
     const height = window.innerHeight;
     // Each layer is tall enough to cover the viewport after its full parallax travel.
     const layerHeights = layerSpeeds.map((speed) => height + (parallaxActive ? maxScroll * speed : 0));
     const placed = [];
-    const count = Math.min(70, Math.round((width * layerHeights[3]) / 24000));
+    const count = Math.min(80, Math.round((width * layerHeights[3]) / 24000));
 
     for (const layer of layers) layer.replaceChildren();
 
@@ -119,17 +136,68 @@
     layers.forEach((layer, index) => { layer.style.height = `${layerHeights[index].toFixed(0)}px`; });
   }
 
-  function updatePatternParallax() {
-    if (parallaxFramePending) return;
-    parallaxFramePending = true;
-    window.requestAnimationFrame(() => {
-      parallaxFramePending = false;
-      if (!parallaxActive) return;
-      const scroll = Math.min(Math.max(window.scrollY, 0), maxScroll);
-      layers.forEach((layer, index) => {
-        layer.style.transform = `translate3d(0, ${(-scroll * layerSpeeds[index]).toFixed(1)}px, 0)`;
-      });
+  function targetOf(index) {
+    const scroll = Math.min(Math.max(window.scrollY, 0), maxScroll);
+    return { x: sidebarShift * sidebarFollow[index], y: -scroll * layerSpeeds[index] };
+  }
+
+  function writeLayer(index) {
+    layers[index].style.translate = `${current[index].x.toFixed(1)}px ${current[index].y.toFixed(1)}px`;
+  }
+
+  // One rAF loop that runs only while some layer is still catching up, then stops.
+  function easeLayers(now) {
+    const dt = lastFrame ? Math.min(now - lastFrame, 64) : 16;
+    lastFrame = now;
+    const stepX = 1 - Math.exp(-dt / easeTimeX);
+    const stepY = 1 - Math.exp(-dt / easeTimeY);
+    // While the sidebar slides, follow the cards' real offset (it isn't a fixed fraction of the sidebar).
+    const tracking = now < trackCardsUntil;
+    if (tracking && cards) sidebarShift = cards.getBoundingClientRect().left - cardsClosedLeft;
+    let moving = tracking;
+    layers.forEach((layer, index) => {
+      const target = targetOf(index);
+      const position = current[index];
+      position.x += (target.x - position.x) * stepX;
+      position.y += (target.y - position.y) * stepY;
+      if (Math.abs(target.x - position.x) < 0.1 && Math.abs(target.y - position.y) < 0.1) {
+        position.x = target.x;
+        position.y = target.y;
+      } else {
+        moving = true;
+      }
+      writeLayer(index);
     });
+    if (moving) {
+      window.requestAnimationFrame(easeLayers);
+    } else {
+      easing = false;
+      lastFrame = 0;
+    }
+  }
+
+  function startEasing() {
+    if (!parallaxActive || easing) return;
+    easing = true;
+    window.requestAnimationFrame(easeLayers);
+  }
+
+  function snapLayers() {
+    layers.forEach((layer, index) => {
+      current[index] = targetOf(index);
+      writeLayer(index);
+    });
+  }
+
+  function syncSidebarShift() {
+    const open = Boolean(shell?.classList.contains("is-sidebar-open"));
+    if (open === sidebarOpen) return;
+    sidebarOpen = open;
+    // The padding transition hasn't started yet, so this reads the cards' closed position.
+    // shortcut: a window resize while the sidebar stays open keeps the old offset until it closes; fine for a hover drawer.
+    if (open && cards) cardsClosedLeft = cards.getBoundingClientRect().left;
+    trackCardsUntil = performance.now() + 400; // covers the 260ms slide
+    startEasing();
   }
 
   // Reshuffle only when the width changes or the layers no longer cover the page; height-only changes
@@ -144,7 +212,7 @@
     lastLayout = layout;
     coveredHeight = needed;
     placeMarks();
-    updatePatternParallax();
+    if (parallaxActive) snapLayers();
   }
 
   function syncPatternParallax() {
@@ -153,10 +221,10 @@
     parallaxActive = shouldEnable;
 
     if (shouldEnable) {
-      window.addEventListener("scroll", updatePatternParallax, { passive: true });
+      window.addEventListener("scroll", startEasing, { passive: true });
     } else {
-      window.removeEventListener("scroll", updatePatternParallax);
-      for (const layer of layers) layer.style.removeProperty("transform");
+      window.removeEventListener("scroll", startEasing);
+      for (const layer of layers) layer.style.removeProperty("translate");
     }
     layoutPattern();
   }
@@ -164,6 +232,7 @@
   if (layers.length === layerSpeeds.length) {
     syncPatternParallax();
     reducedMotionPreference?.addEventListener("change", syncPatternParallax);
+    if (shell) new MutationObserver(syncSidebarShift).observe(shell, { attributeFilter: ["class"] });
     let resizeTimer = 0;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
