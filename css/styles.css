@@ -716,8 +716,11 @@ h3 {
   align-items: flex-start;
   gap: 0.3rem;
   align-self: center;
+  max-width: none;
   margin: 0;
   color: var(--color-text);
+  /* The name sizes itself to this column (cqi), so it stays on one line at every width. */
+  container-type: inline-size;
 }
 
 /* Muted greeting and role framing the gradient name; translucent white in dark mode. */
@@ -744,13 +747,12 @@ h3 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 5vw, 3.4rem);
+  font-size: min(4.25rem, 8.8cqi);
   font-weight: 900;
   letter-spacing: -0.035em;
   line-height: 1.1;
-}
-
-.intro-name-lines > span {
-  display: block;
+  white-space: nowrap;
 }
 
 .hero-portrait {
@@ -852,48 +854,50 @@ h3 {
   }
 }
 
-/* Main-site canvas: repeating blue-gradient AC marks, never on the sidebar.
-   At rest it is one layer; script.js moves it (parallax) via an inline transform. */
+/* Main-site canvas: randomly placed blue-gradient AC marks, never on the sidebar.
+   script.js fills the four depth layers (small marks in the first, large in the last) and moves each
+   layer at its own speed for parallax. */
 .canvas-pattern {
   position: fixed;
   z-index: -1;
-  inset: -48px 0;
-  will-change: transform;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org/2000/svg'%20width%3D'180'%20height%3D'128'%20viewBox%3D'0%200%20180%20128'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'mark'%20x1%3D'0'%20y1%3D'1'%20x2%3D'1'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230041c2'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%2379b8ff'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%20fill%3D'url(%23mark)'%20font-family%3D'Nunito%2Csans-serif'%20font-size%3D'17'%20font-weight%3D'900'%3E%3Ctext%20x%3D'12'%20y%3D'30'%3E%26lt%3BAC%26gt%3B%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'75'%3E%26lt%3BAC%26gt%3B%3C%2Ftext%3E%3Ctext%20x%3D'20'%20y%3D'120'%3E%26lt%3BAC%26gt%3B%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-  background-repeat: repeat;
-  background-size: 180px 128px;
-  opacity: var(--stamp-opacity);
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
-/* Entrance only: the same tile (doubled to 360x256) split across four layers that fade in separately.
-   script.js adds .is-settled afterwards so only the single cheap layer above stays composited. */
-.has-page-entry-motion .canvas-pattern:not(.is-settled) {
-  background-image: none;
+.canvas-pattern > span {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 100%;
+  opacity: var(--stamp-opacity);
+  will-change: transform;
 }
 
-.canvas-pattern > span {
-  display: none;
+.canvas-pattern i {
+  position: absolute;
+  color: #0041c2;
+  background-image: linear-gradient(130deg, #0041c2 10%, #79b8ff 92%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Edge fade in the canvas colour (white in light mode, black in dark) so marks fade out instead of clipping. */
+.canvas-pattern::after {
+  --edge-fade: clamp(1.5rem, 7vmin, 5rem);
+  content: "";
   position: absolute;
   inset: 0;
-  background-repeat: repeat;
-  background-size: 360px 256px;
-}
-
-.canvas-pattern > :nth-child(1) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='256' viewBox='0 0 360 256'%3E%3Cdefs%3E%3ClinearGradient id='mark' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%230041c2'/%3E%3Cstop offset='100%25' stop-color='%2379b8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23mark)' font-family='Nunito,sans-serif' font-size='17' font-weight='900'%3E%3Ctext x='12' y='30'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='200' y='120'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='278' y='203'%3E%26lt;AC%26gt;%3C/text%3E%3C/g%3E%3C/svg%3E");
-}
-
-.canvas-pattern > :nth-child(2) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='256' viewBox='0 0 360 256'%3E%3Cdefs%3E%3ClinearGradient id='mark' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%230041c2'/%3E%3Cstop offset='100%25' stop-color='%2379b8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23mark)' font-family='Nunito,sans-serif' font-size='17' font-weight='900'%3E%3Ctext x='98' y='75'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='12' y='158'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='200' y='248'%3E%26lt;AC%26gt;%3C/text%3E%3C/g%3E%3C/svg%3E");
-}
-
-.canvas-pattern > :nth-child(3) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='256' viewBox='0 0 360 256'%3E%3Cdefs%3E%3ClinearGradient id='mark' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%230041c2'/%3E%3Cstop offset='100%25' stop-color='%2379b8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23mark)' font-family='Nunito,sans-serif' font-size='17' font-weight='900'%3E%3Ctext x='20' y='120'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='192' y='30'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='98' y='203'%3E%26lt;AC%26gt;%3C/text%3E%3C/g%3E%3C/svg%3E");
-}
-
-.canvas-pattern > :nth-child(4) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='256' viewBox='0 0 360 256'%3E%3Cdefs%3E%3ClinearGradient id='mark' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%230041c2'/%3E%3Cstop offset='100%25' stop-color='%2379b8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23mark)' font-family='Nunito,sans-serif' font-size='17' font-weight='900'%3E%3Ctext x='278' y='75'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='20' y='248'%3E%26lt;AC%26gt;%3C/text%3E%3Ctext x='192' y='158'%3E%26lt;AC%26gt;%3C/text%3E%3C/g%3E%3C/svg%3E");
+  background:
+    linear-gradient(to bottom, var(--main-canvas), transparent) top / 100% var(--edge-fade) no-repeat,
+    linear-gradient(to top, var(--main-canvas), transparent) bottom / 100% var(--edge-fade) no-repeat,
+    linear-gradient(to right, var(--main-canvas), transparent) left / var(--edge-fade) 100% no-repeat,
+    linear-gradient(to left, var(--main-canvas), transparent) right / var(--edge-fade) 100% no-repeat;
 }
 
 /* Remove only the light-theme portrait halo; preserve its dark-mode blend. */
@@ -943,8 +947,8 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 
-  .canvas-pattern {
-    transform: none;
+  .canvas-pattern > span {
+    transform: none !important;
     will-change: auto;
   }
 
@@ -974,15 +978,14 @@ h3 {
   }
 }
 
-/* Load sequence: empty canvas, pattern groups fade in one after another, then the intro card. */
+/* Load sequence: empty canvas, depth layers fade in one after another, then the intro card. */
 @keyframes portfolio-pattern-entry {
   from {
     opacity: 0;
   }
 }
 
-.has-page-entry-motion .canvas-pattern:not(.is-settled) > span {
-  display: block;
+.has-page-entry-motion .canvas-pattern > span {
   animation: portfolio-pattern-entry 800ms ease-out var(--entry-delay, 0ms) both;
 }
 

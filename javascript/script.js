@@ -72,53 +72,106 @@
     }
   });
 
-  // Keep the repeating pattern almost fixed: only 4% of scroll distance, capped at 40px.
-  // Writing the element's own transform avoids restyling the whole document on every scroll frame.
+  // Background marks: random positions and sizes on every visit, sorted into four depth layers.
+  // Small marks sit in the slow back layer, large ones in the faster front layer (subtle parallax).
   const pattern = document.querySelector(".canvas-pattern");
+  const layers = pattern ? Array.from(pattern.children) : [];
+  const layerSpeeds = [0.03, 0.06, 0.1, 0.14];
+  const minMarkSize = 12;
+  const maxMarkSize = 36;
   let parallaxActive = false;
-  let lastParallaxOffset = null;
   let parallaxFramePending = false;
+  let maxScroll = 0;
+
+  function placeMarks() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    // Each layer is tall enough to cover the viewport after its full parallax travel.
+    const layerHeights = layerSpeeds.map((speed) => height + (parallaxActive ? maxScroll * speed : 0));
+    const placed = [];
+    const count = Math.min(70, Math.round((width * layerHeights[3]) / 24000));
+
+    for (const layer of layers) layer.replaceChildren();
+
+    for (let i = 0; i < count; i += 1) {
+      const size = minMarkSize + Math.random() ** 1.6 * (maxMarkSize - minMarkSize);
+      const depth = Math.min(3, Math.floor(((size - minMarkSize) / (maxMarkSize - minMarkSize)) * 4));
+      const boxWidth = size * 2.6;
+      const gap = size * 0.9;
+      // Rejection sampling: retry until the mark clears every mark already placed (at scroll 0).
+      for (let attempt = 0; attempt < 12; attempt += 1) {
+        const x = Math.random() * (width - boxWidth * 0.5) - boxWidth * 0.25;
+        const y = Math.random() * layerHeights[depth] - size * 0.5;
+        const clear = placed.every((mark) =>
+          x > mark.x + mark.w + gap || x + boxWidth + gap < mark.x ||
+          y > mark.y + mark.h + gap || y + size + gap < mark.y
+        );
+        if (!clear) continue;
+        placed.push({ x, y, w: boxWidth, h: size, depth });
+        const mark = document.createElement("i");
+        mark.textContent = "<AC>";
+        mark.style.cssText = `left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;font-size:${size.toFixed(1)}px`;
+        layers[depth].append(mark);
+        break;
+      }
+    }
+
+    layers.forEach((layer, index) => { layer.style.height = `${layerHeights[index].toFixed(0)}px`; });
+  }
 
   function updatePatternParallax() {
     if (parallaxFramePending) return;
     parallaxFramePending = true;
     window.requestAnimationFrame(() => {
-      if (parallaxActive && pattern) {
-        const offset = (-Math.min(Math.max(window.scrollY, 0) * 0.04, 40)).toFixed(1);
-        if (offset !== lastParallaxOffset) {
-          pattern.style.transform = `translate3d(0, ${offset}px, 0)`;
-          lastParallaxOffset = offset;
-        }
-      }
       parallaxFramePending = false;
+      if (!parallaxActive) return;
+      const scroll = Math.min(Math.max(window.scrollY, 0), maxScroll);
+      layers.forEach((layer, index) => {
+        layer.style.transform = `translate3d(0, ${(-scroll * layerSpeeds[index]).toFixed(1)}px, 0)`;
+      });
     });
+  }
+
+  // Reshuffle only when the width changes or the layers no longer cover the page; height-only changes
+  // (mobile URL bar) keep the current marks so nothing jumps mid-scroll.
+  let lastLayout = "";
+  let coveredHeight = 0;
+  function layoutPattern() {
+    maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const layout = `${window.innerWidth}:${parallaxActive}`;
+    const needed = window.innerHeight + (parallaxActive ? maxScroll * layerSpeeds[3] : 0);
+    if (layout === lastLayout && needed <= coveredHeight + 80) return;
+    lastLayout = layout;
+    coveredHeight = needed;
+    placeMarks();
+    updatePatternParallax();
   }
 
   function syncPatternParallax() {
     const shouldEnable = !reducedMotionPreference?.matches;
-    if (shouldEnable === parallaxActive) return;
+    if (shouldEnable === parallaxActive && lastLayout) return;
     parallaxActive = shouldEnable;
 
     if (shouldEnable) {
       window.addEventListener("scroll", updatePatternParallax, { passive: true });
-      updatePatternParallax();
     } else {
       window.removeEventListener("scroll", updatePatternParallax);
-      pattern?.style.removeProperty("transform");
-      lastParallaxOffset = null;
+      for (const layer of layers) layer.style.removeProperty("transform");
     }
+    layoutPattern();
   }
 
-  syncPatternParallax();
-  reducedMotionPreference?.addEventListener("change", syncPatternParallax);
-
-  // After the staggered entrance, collapse the four fading layers back into one (same picture, less GPU work).
-  const lastPatternLayer = pattern?.lastElementChild;
-  const settlePattern = (event) => {
-    if (event.target === lastPatternLayer) pattern.classList.add("is-settled");
-  };
-  pattern?.addEventListener("animationend", settlePattern);
-  pattern?.addEventListener("animationcancel", settlePattern);
+  if (layers.length === layerSpeeds.length) {
+    syncPatternParallax();
+    reducedMotionPreference?.addEventListener("change", syncPatternParallax);
+    let resizeTimer = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(layoutPattern, 200);
+    });
+    // Page height settles after fonts and the portrait load.
+    window.addEventListener("load", layoutPattern);
+  }
 
   const siteShell = document.querySelector(".site-shell");
   const desktopDrawer = document.querySelector(".desktop-drawer");
