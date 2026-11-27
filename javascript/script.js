@@ -352,8 +352,9 @@
       '.desktop-nav a[href^="#"], .mobile-nav a[href^="#"]'
     )
   );
-  const mobileMenu = document.querySelector(".mobile-nav");
-  const mobileMenuSummary = mobileMenu?.querySelector("summary");
+  const mobileHeader = document.querySelector(".mobile-header");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuToggle = mobileHeader?.querySelector(".mobile-menu-toggle");
 
   const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
 
@@ -447,21 +448,39 @@
     });
   }
 
-  if (!mobileMenu || !mobileMenuSummary) return;
+  if (!mobileHeader || !mobileMenu || !mobileMenuToggle) return;
+
+  function setMobileMenu(open) {
+    mobileHeader.classList.toggle("is-open", open);
+    mobileMenu.inert = !open;
+    mobileMenuToggle.setAttribute("aria-expanded", String(open));
+    mobileMenuToggle.setAttribute("aria-label", open ? "Hide navigation" : "Show navigation");
+    // Slide the button down to float just below the open panel.
+    const offset = open ? mobileMenu.offsetHeight - mobileMenuToggle.offsetTop + 10 : 0;
+    mobileMenuToggle.style.setProperty("--menu-offset", `${offset}px`);
+  }
+
+  const isMobileMenuOpen = () => mobileHeader.classList.contains("is-open");
+
+  mobileMenuToggle.addEventListener("click", () => setMobileMenu(!isMobileMenuOpen()));
 
   mobileMenu.addEventListener("click", (event) => {
-    const link = event.target.closest('a[href^="#"]');
-    if (!link) return;
-
-    mobileMenu.open = false;
-    requestAnimationFrame(() => mobileMenuSummary.focus({ preventScroll: true }));
+    if (!event.target.closest('a[href^="#"]')) return;
+    setMobileMenu(false);
+    requestAnimationFrame(() => mobileMenuToggle.focus({ preventScroll: true }));
   });
 
-  mobileMenu.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || !mobileMenu.open) return;
-
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !isMobileMenuOpen()) return;
     event.preventDefault();
-    mobileMenu.open = false;
-    mobileMenuSummary.focus();
+    setMobileMenu(false);
+    mobileMenuToggle.focus();
   });
+
+  // A tap outside the panel closes it.
+  document.addEventListener("pointerdown", (event) => {
+    if (isMobileMenuOpen() && !mobileHeader.contains(event.target)) setMobileMenu(false);
+  });
+
+  mobileBreakpoint?.addEventListener("change", () => setMobileMenu(false));
 })();
