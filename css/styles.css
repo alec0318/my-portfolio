@@ -79,24 +79,6 @@ summary:focus-visible {
   border-radius: 0.25rem;
 }
 
-.skip-link {
-  position: fixed;
-  z-index: 40;
-  top: 0.75rem;
-  left: 0.75rem;
-  padding: 0.65rem 0.9rem;
-  transform: translateY(-180%);
-  border-radius: var(--radius-small);
-  background: var(--color-accent);
-  color: var(--color-accent-text);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
 .site-shell {
   position: relative;
   min-height: 100vh;
