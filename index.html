@@ -12,10 +12,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Nunito is only used for the <AC> monogram and wordmarks; `text` limits the download to those glyphs. -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap&text=%3C%3EACaeljndrotg%20" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=nav-20261126">
+  <link rel="stylesheet" href="css/styles.css?v=toggle-20261126">
   <!-- Inline so the entrance and reveal start states are set before first paint (no flash of the final state). -->
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { document.documentElement.classList.add("has-page-entry-motion"); if ("IntersectionObserver" in window) document.documentElement.classList.add("has-scroll-reveal"); }</script>
-  <script src="javascript/script.js?v=nav-20261126" defer onerror="document.documentElement.classList.remove('has-page-entry-motion', 'has-scroll-reveal')"></script>
+  <script src="javascript/script.js?v=toggle-20261126" defer onerror="document.documentElement.classList.remove('has-page-entry-motion', 'has-scroll-reveal')"></script>
 </head>
 <body>
   <div class="canvas-pattern" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -24,7 +24,7 @@
   <div class="site-shell" id="site-shell">
     <div class="desktop-drawer" id="desktop-drawer">
       <button class="sidebar-toggle" type="button" aria-controls="site-sidebar" aria-expanded="false" aria-label="Show navigation">
-        <span class="toggle-bracket" aria-hidden="true">&gt;</span>
+        <svg class="toggle-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
       <aside class="sidebar" id="site-sidebar" aria-label="Portfolio sidebar" inert>
         <a class="sidebar-brand" href="#home" aria-label="Alejandro Cartagena home">
@@ -52,9 +52,7 @@
     </div>
 
     <header class="mobile-header">
-      <button class="mobile-menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Show navigation">
-        <span class="toggle-bracket" aria-hidden="true">&gt;</span>
-      </button>
+      <button class="mobile-menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false">Menu</button>
       <div class="mobile-menu" id="mobile-menu" inert>
         <a class="mobile-brand" href="#home" aria-label="Alejandro Cartagena home">
           <span class="monogram" aria-hidden="true">&lt;AC&gt;</span>

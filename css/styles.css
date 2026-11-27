@@ -119,53 +119,51 @@ summary:focus-visible {
   pointer-events: none;
 }
 
-/* Circular toggles (desktop drawer and mobile menu) carrying the logo's angle bracket. */
-.sidebar-toggle,
-.mobile-menu-toggle {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-accent-text);
-  box-shadow: var(--shadow-menu);
-  cursor: pointer;
-}
-
-.sidebar-toggle:hover,
-.mobile-menu-toggle:hover {
-  filter: brightness(1.12);
-}
-
-/* One ">" glyph, rotated to point the way the panel will move. */
-.toggle-bracket {
-  display: block;
-  font-family: "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
-  font-size: 1.5rem;
-  font-weight: 900;
-  line-height: 1;
-  transition: transform 260ms var(--ease-drawer);
-}
-
+/* Desktop drawer toggle: a circle in the logo gradient with a centred arrow. */
 .sidebar-toggle {
   position: absolute;
   z-index: 2;
   top: 50%;
   left: 0.5rem;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(130deg, #0041c2 10%, #79b8ff 92%);
+  color: #ffffff;
+  box-shadow: var(--shadow-menu);
+  cursor: pointer;
   pointer-events: auto;
   transform: translateY(-50%);
   transition: left 260ms var(--ease-drawer);
 }
 
-/* Open: the button floats just outside the sidebar's edge. */
+.sidebar-toggle:hover {
+  filter: brightness(1.1);
+}
+
+/* Drawn centred in its 24x24 box, so rotating it keeps it centred in the circle. */
+.toggle-arrow {
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  transition: transform 260ms var(--ease-drawer);
+}
+
+/* Open: the button floats just outside the sidebar's edge, arrow pointing back. */
 .desktop-drawer.is-open .sidebar-toggle {
   left: calc(var(--sidebar-width) + 0.6rem);
 }
 
-.desktop-drawer.is-open .toggle-bracket {
+.desktop-drawer.is-open .toggle-arrow {
   transform: rotate(180deg);
 }
 
@@ -545,21 +543,35 @@ h3 {
     display: block;
   }
 
+  /* "Menu" button, top right. Open, it nests in the panel's bottom-right corner: same 1rem inset as at
+     the top, and a 1rem radius so its corner follows the panel's 2rem corner (2rem - 1rem inset). */
   .mobile-menu-toggle {
+    --menu-inset: 1rem;
     position: fixed;
     z-index: 22;
-    top: 0.75rem;
-    left: 50%;
-    transform: translate(-50%, var(--menu-offset, 0px));
+    top: var(--menu-inset);
+    right: var(--menu-inset);
+    min-height: 2.5rem;
+    padding: 0.5rem 1.1rem;
+    border: 0;
+    border-radius: calc(var(--radius-panel) - var(--menu-inset));
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    box-shadow: var(--shadow-menu);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    transform: translateY(var(--menu-offset, 0px));
     transition: transform 300ms var(--ease-drawer);
   }
 
-  .mobile-menu-toggle .toggle-bracket {
-    transform: rotate(90deg);
+  .mobile-menu-toggle:hover {
+    filter: brightness(1.12);
   }
 
-  .mobile-header.is-open .mobile-menu-toggle .toggle-bracket {
-    transform: rotate(-90deg);
+  .mobile-header.is-open .mobile-menu-toggle {
+    box-shadow: none;
   }
 
   .mobile-menu {
@@ -572,7 +584,8 @@ h3 {
     align-items: center;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 1.25rem clamp(1rem, 5vw, 1.5rem) 1rem;
+    /* Bottom padding leaves the corner free for the docked Menu button. */
+    padding: 1.25rem clamp(1rem, 5vw, 1.5rem) 4.25rem;
     border: 1px solid var(--color-border);
     border-top: 0;
     border-radius: 0 0 var(--radius-panel) var(--radius-panel);

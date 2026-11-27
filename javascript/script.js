@@ -454,9 +454,9 @@
     mobileHeader.classList.toggle("is-open", open);
     mobileMenu.inert = !open;
     mobileMenuToggle.setAttribute("aria-expanded", String(open));
-    mobileMenuToggle.setAttribute("aria-label", open ? "Hide navigation" : "Show navigation");
-    // Slide the button down to float just below the open panel.
-    const offset = open ? mobileMenu.offsetHeight - mobileMenuToggle.offsetTop + 10 : 0;
+    // Slide the button down into the open panel's bottom-right corner, at the same inset it has at the top.
+    const inset = mobileMenuToggle.offsetTop;
+    const offset = open ? mobileMenu.offsetHeight - mobileMenuToggle.offsetHeight - inset * 2 : 0;
     mobileMenuToggle.style.setProperty("--menu-offset", `${offset}px`);
   }
 
