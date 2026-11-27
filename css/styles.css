@@ -543,63 +543,65 @@ h3 {
     display: block;
   }
 
-  /* "Menu" button, top right. Open, it nests in the panel's bottom-right corner: same 1rem inset as at
-     the top, and a 1rem radius so its corner follows the panel's 2rem corner (2rem - 1rem inset). */
+  /* Gradient "Menu" button, top right. It expands into a compact menu card and then floats just below it
+     (script.js sets --menu-offset and swaps the label to "Close"). */
   .mobile-menu-toggle {
-    --menu-inset: 1rem;
     position: fixed;
     z-index: 22;
-    top: var(--menu-inset);
-    right: var(--menu-inset);
-    min-height: 2.5rem;
-    padding: 0.5rem 1.1rem;
+    top: 1rem;
+    right: 1rem;
+    min-width: 5.5rem;
+    min-height: 2.9rem;
+    padding: 0.6rem 1.25rem;
     border: 0;
-    border-radius: calc(var(--radius-panel) - var(--menu-inset));
-    background: var(--color-accent);
-    color: var(--color-accent-text);
+    border-radius: 1rem;
+    background: linear-gradient(130deg, #0041c2 10%, #79b8ff 92%);
+    color: #ffffff;
     box-shadow: var(--shadow-menu);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.98rem;
     font-weight: 700;
     line-height: 1.2;
     transform: translateY(var(--menu-offset, 0px));
-    transition: transform 300ms var(--ease-drawer);
+    transition: transform 320ms var(--ease-drawer);
   }
 
   .mobile-menu-toggle:hover {
-    filter: brightness(1.12);
+    filter: brightness(1.1);
   }
 
-  .mobile-header.is-open .mobile-menu-toggle {
-    box-shadow: none;
-  }
-
+  /* Closed, the card is clipped to the button's own footprint (top-right corner), so opening reads as
+     the button growing into the menu. */
   .mobile-menu {
+    --button-w: 5.5rem;
+    --button-h: 2.9rem;
     position: fixed;
     z-index: 21;
-    inset: 0 0 auto;
+    top: 1rem;
+    right: 1rem;
     display: flex;
-    max-height: calc(100dvh - 4.5rem);
+    width: min(17rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 6.5rem);
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
     overscroll-behavior: contain;
-    /* Bottom padding leaves the corner free for the docked Menu button. */
-    padding: 1.25rem clamp(1rem, 5vw, 1.5rem) 4.25rem;
+    padding: 1.25rem 1rem 1rem;
     border: 1px solid var(--color-border);
-    border-top: 0;
-    border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+    border-radius: var(--radius-panel);
     background: var(--color-surface);
     box-shadow: var(--shadow-menu);
-    transform: translateY(calc(-100% - 2rem));
+    clip-path: inset(0 0 calc(100% - var(--button-h)) calc(100% - var(--button-w)) round 1rem);
+    opacity: 0;
     visibility: hidden;
-    transition: transform 300ms var(--ease-drawer), visibility 0s linear 300ms;
+    transition: clip-path 320ms var(--ease-drawer), opacity 200ms ease 120ms, visibility 0s linear 320ms;
   }
 
   .mobile-header.is-open .mobile-menu {
-    transform: none;
+    clip-path: inset(-2rem round var(--radius-panel));
+    opacity: 1;
     visibility: visible;
-    transition: transform 300ms var(--ease-drawer), visibility 0s;
+    transition: clip-path 320ms var(--ease-drawer), opacity 160ms ease, visibility 0s;
   }
 
   .mobile-brand {

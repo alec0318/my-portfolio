@@ -454,9 +454,9 @@
     mobileHeader.classList.toggle("is-open", open);
     mobileMenu.inert = !open;
     mobileMenuToggle.setAttribute("aria-expanded", String(open));
-    // Slide the button down into the open panel's bottom-right corner, at the same inset it has at the top.
-    const inset = mobileMenuToggle.offsetTop;
-    const offset = open ? mobileMenu.offsetHeight - mobileMenuToggle.offsetHeight - inset * 2 : 0;
+    mobileMenuToggle.textContent = open ? "Close" : "Menu";
+    // Both share the same top-right anchor; open, the button floats 10px below the card.
+    const offset = open ? mobileMenu.offsetHeight + 10 : 0;
     mobileMenuToggle.style.setProperty("--menu-offset", `${offset}px`);
   }
 
